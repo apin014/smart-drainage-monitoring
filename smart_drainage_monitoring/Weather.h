@@ -14,7 +14,7 @@ class WeatherSensor {
     WeatherSensor(uint8_t pin, uint8_t type);
     void init();
     void begin();
-    float getTemperature(bool fahrenheit);
+    float getTemperature(bool fahrenheit = false);
     float getHumidity();
 };
 

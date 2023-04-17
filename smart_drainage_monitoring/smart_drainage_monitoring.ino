@@ -4,6 +4,9 @@
 
 #define WATER_FLOW_SENSOR_1 35
 #define WATER_FLOW_SENSOR_2 34
+#define WATER_LEVEL 36
+#define WEATHER_SENSOR_PIN 13
+#define WEATHER_SENSOR_TYPE DHT11
 
 volatile int pulseCount1 = 0;
 volatile int pulseCount2 = 0;
@@ -13,6 +16,8 @@ unsigned long oldTime = 0;
 
 FlowSensor waterflow1(WATER_FLOW_SENSOR_1);
 FlowSensor waterflow2(WATER_FLOW_SENSOR_2);
+WaterLevel level(WATER_LEVEL);
+WeatherSensor weather(WEATHER_SENSOR_PIN, WEATHER_SENSOR_TYPE);
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,6 +26,7 @@ void setup() {
   pinMode(WATER_FLOW_SENSOR_2, INPUT_PULLUP);
   attachInterrupt(waterflow1.getInterruptPin(), ISR1, FALLING);
   attachInterrupt(waterflow2.getInterruptPin(), ISR2, FALLING);
+  weather.begin();
 }
 
 void loop() {
@@ -42,11 +48,24 @@ void loop() {
   }
 
   if (flowrate1 > 0.0 || flowrate2 > 0.0) {
+    Serial.println("----------------------------");
     Serial.print("Waterflow Sensor 1: ");
-    Serial.println(flowrate1);
+    Serial.print(flowrate1);
+    Serial.println(" L/min");
     Serial.print("Waterflow sensor 2: ");
-    Serial.println(flowrate2);
+    Serial.print(flowrate2);
+    Serial.println(" L/min");
   }
+  Serial.println("----------------------------");
+  Serial.print("Water Level: ");
+  Serial.print(level.getWaterLevel(analogRead(WATER_LEVEL)));
+  Serial.println(" cm");
+
+  Serial.println("----------------------------");
+  Serial.print("Temperature (Celsius): ");
+  Serial.println(weather.getTemperature());
+  Serial.print("Humidity (%): ");
+  Serial.println(weather.getHumidity());
 
   delay(1000);
 }
