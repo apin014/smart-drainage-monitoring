@@ -1,10 +1,9 @@
 #include "FlowSensor.h"
-#include "Ultrasonic.h"
+#include "WaterLevel.h"
+#include "Weather.h"
 
 #define WATER_FLOW_SENSOR_1 35
 #define WATER_FLOW_SENSOR_2 34
-#define TRIGGER_PIN 13
-#define ECHO_PIN 12
 
 volatile int pulseCount1 = 0;
 volatile int pulseCount2 = 0;
@@ -12,7 +11,6 @@ float flowrate1 = 0.0;
 float flowrate2 = 0.0;
 unsigned long oldTime = 0;
 
-Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
 FlowSensor waterflow1(WATER_FLOW_SENSOR_1);
 FlowSensor waterflow2(WATER_FLOW_SENSOR_2);
 
@@ -49,14 +47,6 @@ void loop() {
     Serial.print("Waterflow sensor 2: ");
     Serial.println(flowrate2);
   }
-
-  Serial.println("----------------------------------");
-  ultrasonic.clearTrig();
-  ultrasonic.activateTrig();
-  Serial.print("Distance: ");
-  Serial.print(ultrasonic.calculateDist());
-  Serial.println(" cm");
-  Serial.println("----------------------------------");
 
   delay(1000);
 }
